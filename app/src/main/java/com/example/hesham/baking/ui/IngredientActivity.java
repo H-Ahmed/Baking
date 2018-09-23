@@ -3,6 +3,7 @@ package com.example.hesham.baking.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.hesham.baking.R;
 import com.example.hesham.baking.data.model.Ingredient;
+import com.example.hesham.baking.ui.composer.IngredientFragment;
 import com.example.hesham.baking.ui.composer.IngredientsAdapter;
 
 import java.util.ArrayList;
@@ -28,11 +30,9 @@ public class IngredientActivity extends AppCompatActivity {
     Toolbar mToolbar;
     private String mRecipeName;
     private List<Ingredient> mIngredients;
-    private RecyclerView.LayoutManager layoutManager;
-    private IngredientsAdapter adapter;
 
-    @BindView(R.id.ingredients_recycler_view)
-    RecyclerView mIngredientsRecyclerView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,8 @@ public class IngredientActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 
         if (savedInstanceState != null && savedInstanceState.containsKey(INGREDIENT_ACTIVITY_ON_SAVE_INGREDIENTS)
                 && savedInstanceState.containsKey(INGREDIENT_ACTIVITY_ON_SAVE_RECIPE_NAME)) {
@@ -74,11 +76,12 @@ public class IngredientActivity extends AppCompatActivity {
 
     private void setupIngredients() {
         getSupportActionBar().setTitle(mRecipeName);
-        layoutManager = new LinearLayoutManager(this);
-        mIngredientsRecyclerView.setLayoutManager(layoutManager);
-        mIngredientsRecyclerView.setHasFixedSize(true);
-        adapter = new IngredientsAdapter(mIngredients);
-        mIngredientsRecyclerView.setAdapter(adapter);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        IngredientFragment ingredientFragment = new IngredientFragment();
+        ingredientFragment.setIngredients(mIngredients);
+        fragmentManager.beginTransaction()
+                .replace(R.id.ingredient_container,ingredientFragment)
+                .commit();
     }
 
     @Override

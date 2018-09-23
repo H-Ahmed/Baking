@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 
 import com.example.hesham.baking.R;
 import com.example.hesham.baking.data.model.Step;
+import com.example.hesham.baking.ui.composer.IngredientFragment;
+import com.example.hesham.baking.ui.composer.StepFragment;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -38,10 +41,6 @@ public class StepActivity extends AppCompatActivity {
     private static final String STEP_ACTIVITY_ON_SAVE_RECIPE_NAME = "step_activity_on_save_recipe_name";
 
 
-    @BindView(R.id.playerView)
-    PlayerView mPlayerView;
-    @BindView(R.id.step_description_text_view)
-    TextView mStepDescriptionTextView;
     @BindView(R.id.next_step_button)
     Button mNextStepButton;
     @BindView(R.id.previous_step_button)
@@ -51,7 +50,7 @@ public class StepActivity extends AppCompatActivity {
     @BindView(R.id.navigation_layout)
     LinearLayout mNavigationLayout;
 
-    private SimpleExoPlayer mPlayer;
+
     private String mRecipeName;
     private List<Step> mSteps;
     private int mStepIndex;
@@ -101,6 +100,7 @@ public class StepActivity extends AppCompatActivity {
                 closeActivity();
             }
         }
+
     }
 
     @Override
@@ -119,19 +119,12 @@ public class StepActivity extends AppCompatActivity {
             closeActivity();
         } else {
 
-            mStepDescriptionTextView.setText(mStep.getDescription());
-            mPlayerView.setVisibility(View.VISIBLE);
-
-            if (!mStep.getVideoURL().equals("")) {
-                initializePlayer(mStep.getVideoURL());
-            } else if (!mStep.getThumbnailURL().equals("")) {
-                initializePlayer(mStep.getThumbnailURL());
-            } else {
-                mPlayerView.setPlayer(null);
-                mPlayer = null;
-                mPlayerView.setVisibility(View.GONE);
-            }
-
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            StepFragment stepFragment = new StepFragment();
+            stepFragment.setStep(mStep);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.step_container,stepFragment)
+                    .commit();
         }
 
         mNextStepButton.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +135,6 @@ public class StepActivity extends AppCompatActivity {
                 } else {
                     mStepIndex++;
                 }
-                releasePlayer();
                 mStep = mSteps.get(mStepIndex);
                 startStep();
             }
@@ -155,35 +147,11 @@ public class StepActivity extends AppCompatActivity {
                 } else {
                     mStepIndex--;
                 }
-                releasePlayer();
                 mStep = mSteps.get(mStepIndex);
                 startStep();
             }
         });
     }
-
-    private void initializePlayer(String mediaUrl) {
-        mPlayer = ExoPlayerFactory.newSimpleInstance(this, new DefaultTrackSelector());
-        mPlayerView.setPlayer(mPlayer);
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, String.valueOf(R.string.app_name)));
-        final ExtractorMediaSource mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(mediaUrl));
-        mPlayer.prepare(mediaSource);
-        mPlayer.setPlayWhenReady(false);
-
-        mPlayerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                StepActivity.this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                mStepDescriptionTextView.setVisibility(View.GONE);
-                mToolbar.setVisibility(View.GONE);
-                mNavigationLayout.setVisibility(View.GONE);
-            }
-        });
-
-    }
-
 
     private void closeActivity() {
         finish();
@@ -192,25 +160,9 @@ public class StepActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        releasePlayer();
-    }
-
-    private void releasePlayer() {
-        if (mPlayer != null) {
-            mPlayerView.setPlayer(null);
-            mPlayer.release();
-            mPlayer = null;
-        }
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.bind(this).unbind();
     }
-
-
 
 }
