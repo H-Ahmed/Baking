@@ -101,6 +101,31 @@ public class StepActivity extends AppCompatActivity {
             }
         }
 
+        mNextStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mStepIndex >= mSteps.size() - 1) {
+                    mStepIndex = 0;
+                } else {
+                    mStepIndex++;
+                }
+                mStep = mSteps.get(mStepIndex);
+                startStep();
+            }
+        });
+        mPreviousStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mStepIndex <= 0) {
+                    mStepIndex = mSteps.size() - 1;
+                } else {
+                    mStepIndex--;
+                }
+                mStep = mSteps.get(mStepIndex);
+                startStep();
+            }
+        });
+
     }
 
     @Override
@@ -126,31 +151,6 @@ public class StepActivity extends AppCompatActivity {
                     .replace(R.id.step_container,stepFragment)
                     .commit();
         }
-
-        mNextStepButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mStepIndex >= mSteps.size() - 1) {
-                    mStepIndex = 0;
-                } else {
-                    mStepIndex++;
-                }
-                mStep = mSteps.get(mStepIndex);
-                startStep();
-            }
-        });
-        mPreviousStepButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mStepIndex <= 0) {
-                    mStepIndex = mSteps.size() - 1;
-                } else {
-                    mStepIndex--;
-                }
-                mStep = mSteps.get(mStepIndex);
-                startStep();
-            }
-        });
     }
 
     private void closeActivity() {
