@@ -6,18 +6,80 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/playerView"
+    <LinearLayout
+        android:id="@+id/videoLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:layout_weight="2">
+
+        <LinearLayout
+            android:id="@+id/videoURL_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/videoURL_button"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:layout_weight="4"
+                android:background="@android:color/holo_blue_bright"
+                android:padding="8dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_play_button" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:inputType="textCapWords"
+                android:text="Video" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/thumbnailURL_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/thumbnailURL_button"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:layout_weight="4"
+                android:background="@android:color/holo_blue_bright"
+                android:padding="8dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_play_button" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:inputType="textCapWords"
+                android:text="Thumbnail Video" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 
     <TextView
         android:id="@+id/step_description_text_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="3"
         android:gravity="center"
         tools:text="Descriptions" />
 
