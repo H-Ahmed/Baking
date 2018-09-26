@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -34,11 +35,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.example.hesham.baking.ui.composer.RecipeFragment.STEPS_FOR_STEP_ACTIVITY;
+import static com.example.hesham.baking.ui.composer.RecipeFragment.STEP_INDEX;
+
 public class StepActivity extends AppCompatActivity {
 
     private static final String STEP_ACTIVITY_ON_SAVE_STEPS = "step_activity_on_save_steps";
     private static final String STEP_ACTIVITY_ON_SAVE_STEP_INDEX = "step_activity_on_save_step_index";
     private static final String STEP_ACTIVITY_ON_SAVE_RECIPE_NAME = "step_activity_on_save_recipe_name";
+
+    private static final String TAG = "StepActivity";
 
 
     @BindView(R.id.next_step_button)
@@ -83,13 +89,13 @@ public class StepActivity extends AppCompatActivity {
                 Toast.makeText(this, "First Close", Toast.LENGTH_SHORT).show();
             }
 
-            if (intent.hasExtra(RecipeDetailsActivity.STEPS_FOR_STEP_ACTIVITY) &&
+            if (intent.hasExtra(STEPS_FOR_STEP_ACTIVITY) &&
                     intent.hasExtra(Intent.EXTRA_TEXT) &&
-                    intent.hasExtra(RecipeDetailsActivity.STEP_INDEX)) {
+                    intent.hasExtra(STEP_INDEX)) {
 
                 mRecipeName = intent.getStringExtra(Intent.EXTRA_TEXT);
-                mSteps = intent.getParcelableArrayListExtra(RecipeDetailsActivity.STEPS_FOR_STEP_ACTIVITY);
-                mStepIndex = intent.getIntExtra(RecipeDetailsActivity.STEP_INDEX, -1);
+                mSteps = intent.getParcelableArrayListExtra(STEPS_FOR_STEP_ACTIVITY);
+                mStepIndex = intent.getIntExtra(STEP_INDEX, -1);
                 if (mStepIndex != -1) {
                     startStep();
                 } else {
@@ -111,6 +117,7 @@ public class StepActivity extends AppCompatActivity {
                 }
                 mStep = mSteps.get(mStepIndex);
                 startStep();
+                Log.d(TAG, "onClick: Next");
             }
         });
         mPreviousStepButton.setOnClickListener(new View.OnClickListener() {

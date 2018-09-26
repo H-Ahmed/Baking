@@ -21,6 +21,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.hesham.baking.ui.composer.RecipeFragment.INGREDIENT_FOR_INGREDIENT_ACTIVITY;
+
 public class IngredientActivity extends AppCompatActivity {
 
     private static final String INGREDIENT_ACTIVITY_ON_SAVE_INGREDIENTS = "ingredient_activity_on_save_ingredients";
@@ -42,8 +44,6 @@ public class IngredientActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-
         if (savedInstanceState != null && savedInstanceState.containsKey(INGREDIENT_ACTIVITY_ON_SAVE_INGREDIENTS)
                 && savedInstanceState.containsKey(INGREDIENT_ACTIVITY_ON_SAVE_RECIPE_NAME)) {
             mIngredients = savedInstanceState.getParcelableArrayList(INGREDIENT_ACTIVITY_ON_SAVE_INGREDIENTS);
@@ -56,11 +56,11 @@ public class IngredientActivity extends AppCompatActivity {
                 closeActivity();
             }
 
-            if (intent.hasExtra(RecipeDetailsActivity.INGREDIENT_FOR_INGREDIENT_ACTIVITY) &&
+            if (intent.hasExtra(INGREDIENT_FOR_INGREDIENT_ACTIVITY) &&
                     intent.hasExtra(Intent.EXTRA_TEXT)) {
 
                 mRecipeName = intent.getStringExtra(Intent.EXTRA_TEXT);
-                mIngredients = intent.getParcelableArrayListExtra(RecipeDetailsActivity.INGREDIENT_FOR_INGREDIENT_ACTIVITY);
+                mIngredients = intent.getParcelableArrayListExtra(INGREDIENT_FOR_INGREDIENT_ACTIVITY);
 
                 if (mIngredients.size() == 0 || mIngredients == null) {
                     Toast.makeText(IngredientActivity.this, "Error", Toast.LENGTH_SHORT).show();

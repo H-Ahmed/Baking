@@ -58,6 +58,8 @@ public class StepFragment extends Fragment {
         mVideoPlayerView = rootView.findViewById(R.id.video_player_view);
         mThumbnailPlayerView = rootView.findViewById(R.id.thumbnail_player_view);
 
+        mVideoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), new DefaultTrackSelector());
+        mThumbnailPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), new DefaultTrackSelector());
 
         TextView descriptionTextView = rootView.findViewById(R.id.step_description_text_view);
 
@@ -121,7 +123,7 @@ public class StepFragment extends Fragment {
     }
 
     private void startPlayer(SimpleExoPlayer simpleExoPlayer, PlayerView playerView, String videoURL) {
-        simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), new DefaultTrackSelector());
+
         playerView.setPlayer(simpleExoPlayer);
 
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getContext(),
@@ -145,29 +147,30 @@ public class StepFragment extends Fragment {
         mStep = step;
     }
 
+
     @Override
     public void onStop() {
-        super.onStop();
+
         releaseVideo();
         releaseThumbnail();
-        Log.d(TAG, "onStop: Hii");
+        super.onStop();
     }
 
     private void releaseVideo() {
+        mVideoPlayerView.setPlayer(null);
+        mVideoPlayer = null;
         if (mVideoPlayer != null) {
+            mVideoPlayer.setPlayWhenReady(false);
             mVideoPlayer.release();
-            mVideoPlayerView.setPlayer(null);
-            mVideoPlayer = null;
         }
-
     }
 
     private void releaseThumbnail() {
+        mThumbnailPlayerView.setPlayer(null);
+        mThumbnailPlayer = null;
         if (mThumbnailPlayer != null) {
+            mThumbnailPlayer.setPlayWhenReady(false);
             mThumbnailPlayer.release();
-            mThumbnailPlayerView.setPlayer(null);
-            mThumbnailPlayer = null;
         }
-
     }
 }
