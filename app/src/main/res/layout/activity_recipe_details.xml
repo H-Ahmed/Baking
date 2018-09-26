@@ -16,20 +16,10 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="@android:color/white" />
 
-    <Button
-        android:id="@+id/ingredients_button"
+    <FrameLayout
+        android:id="@+id/recipe_container"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_margin="8dp"
-        android:background="@android:color/holo_blue_light"
-        android:inputType="textCapWords"
-        android:textSize="25sp"
-        tools:text="Ingredients" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recipe_steps_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp" />
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"/>
 
 </LinearLayout>

@@ -42,7 +42,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.RecipeDetailsActivity" />
         </activity>
-        <activity android:name=".ui.PlayerActivity"></activity>
+        <activity android:name=".ui.PlayerActivity" />
+        <activity android:name=".ui.MasterListFragmentActivity"></activity>
     </application>
 
 </manifest>

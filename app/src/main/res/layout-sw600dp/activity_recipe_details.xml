@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/two_pane_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -21,62 +22,24 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:id="@+id/recipe_container"
+            android:layout_width="0dp"
+            android:layout_weight="2"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/ingredients_button"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_margin="8dp"
-                android:background="@android:color/holo_blue_light"
-                android:inputType="textCapWords"
-                android:textSize="25sp"
-                tools:text="Ingredients" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recipe_steps_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp" />
-        </LinearLayout>
+            android:scaleType="centerInside"/>
 
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@android:color/holo_purple" />
+            android:background="@android:color/holo_red_dark" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:id="@+id/details_container"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="8dp"
-            android:layout_weight="2"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/ingredients_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <com.google.android.exoplayer2.ui.PlayerView
-                android:id="@+id/playerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="3" />
-
-            <TextView
-                android:id="@+id/step_description_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                tools:text="Descriptions" />
-
-        </LinearLayout>
-
+            android:layout_weight="3"
+            android:scaleType="centerInside" />
 
     </LinearLayout>
 
