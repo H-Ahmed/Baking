@@ -112,6 +112,9 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeFr
 
         } else {
             mTwoPane = false;
+            recipeFragment = new RecipeFragment();
+            recipeFragment.setIngredients(mIngredients);
+            recipeFragment.setSteps(mSteps);
             recipeFragment.setRecipeName(mRecipeName);
             fragmentManager.beginTransaction()
                     .replace(R.id.recipe_container, recipeFragment)
