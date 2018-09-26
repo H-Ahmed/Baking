@@ -157,20 +157,10 @@ public class StepFragment extends Fragment {
     }
 
     private void releaseVideo() {
-        mVideoPlayerView.setPlayer(null);
-        mVideoPlayer = null;
-        if (mVideoPlayer != null) {
-            mVideoPlayer.setPlayWhenReady(false);
-            mVideoPlayer.release();
-        }
+        mVideoPlayer.release();
     }
 
     private void releaseThumbnail() {
-        mThumbnailPlayerView.setPlayer(null);
-        mThumbnailPlayer = null;
-        if (mThumbnailPlayer != null) {
-            mThumbnailPlayer.setPlayWhenReady(false);
-            mThumbnailPlayer.release();
-        }
+        mThumbnailPlayer.release();
     }
 }
