@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.hesham.baking;
+package com.example.hesham.baking.util;
 
 import android.support.test.espresso.IdlingResource;
 

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -14,8 +13,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.hesham.baking.EspressoIdlingResource;
+import com.example.hesham.baking.util.EspressoIdlingResource;
 import com.example.hesham.baking.R;
+
 import com.example.hesham.baking.data.model.Ingredient;
 import com.example.hesham.baking.data.model.Recipe;
 import com.example.hesham.baking.data.model.Step;
@@ -55,8 +55,9 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
         showLoadMessage();
+
+        EspressoIdlingResource.increment();
 
         int noOfColumns = calculateNoOfColumns(this);
         layoutManager = new GridLayoutManager(this, noOfColumns);
@@ -70,22 +71,20 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
             adapter = new RecipesAdapter(mRecipes, MainActivity.this);
             recipesRecyclerView.setAdapter(adapter);
         } else {
-            EspressoIdlingResource.increment();
             Call<Recipe[]> recipeCall = NetworkUtils.getService().getRecipes();
             recipeCall.enqueue(new Callback<Recipe[]>() {
                 @Override
                 public void onResponse(Call<Recipe[]> call, Response<Recipe[]> response) {
                     showRecipesData();
-                    EspressoIdlingResource.decrement();
                     mRecipes = response.body();
                     adapter = new RecipesAdapter(mRecipes, MainActivity.this);
                     recipesRecyclerView.setAdapter(adapter);
+                    EspressoIdlingResource.decrement();
                 }
 
                 @Override
                 public void onFailure(Call<Recipe[]> call, Throwable t) {
                     showErrorMessage();
-                    EspressoIdlingResource.decrement();
                     Log.d(TAG, "onFailure: " + t.toString());
                 }
             });
