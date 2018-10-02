@@ -1,9 +1,6 @@
 package com.example.hesham.baking.ui;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
@@ -13,27 +10,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hesham.baking.R;
 import com.example.hesham.baking.data.model.Step;
-import com.example.hesham.baking.ui.composer.IngredientFragment;
 import com.example.hesham.baking.ui.composer.StepFragment;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 
 import static com.example.hesham.baking.ui.composer.RecipeFragment.STEPS_FOR_STEP_ACTIVITY;
 import static com.example.hesham.baking.ui.composer.RecipeFragment.STEP_INDEX;

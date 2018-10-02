@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.hesham.baking.EspressoIdlingResource;
 import com.example.hesham.baking.R;
 import com.example.hesham.baking.data.model.Ingredient;
 import com.example.hesham.baking.data.model.Recipe;
@@ -69,11 +70,13 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
             adapter = new RecipesAdapter(mRecipes, MainActivity.this);
             recipesRecyclerView.setAdapter(adapter);
         } else {
+            EspressoIdlingResource.increment();
             Call<Recipe[]> recipeCall = NetworkUtils.getService().getRecipes();
             recipeCall.enqueue(new Callback<Recipe[]>() {
                 @Override
                 public void onResponse(Call<Recipe[]> call, Response<Recipe[]> response) {
                     showRecipesData();
+                    EspressoIdlingResource.decrement();
                     mRecipes = response.body();
                     adapter = new RecipesAdapter(mRecipes, MainActivity.this);
                     recipesRecyclerView.setAdapter(adapter);
@@ -82,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
                 @Override
                 public void onFailure(Call<Recipe[]> call, Throwable t) {
                     showErrorMessage();
+                    EspressoIdlingResource.decrement();
                     Log.d(TAG, "onFailure: " + t.toString());
                 }
             });
