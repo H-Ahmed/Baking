@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:configure="com.example.hesham.baking.ui.BakingAppWidgetConfig"
+    android:autoAdvanceViewId="@+id/widget_baking_list_view"
+    android:initialKeyguardLayout="@layout/baking_widget"
+    android:initialLayout="@layout/baking_widget"
+    android:minHeight="110dp"
+    android:minResizeHeight="40dp"
+    android:minWidth="110dp"
+    android:minResizeWidth="40dp"
+    android:previewImage="@drawable/ic_cupcake_widget_home"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="home_screen" />

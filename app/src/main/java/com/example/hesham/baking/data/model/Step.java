@@ -1,19 +1,30 @@
 package com.example.hesham.baking.data.model;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
 public class Step implements Parcelable {
+
+    @ColumnInfo(name = "id")
     @SerializedName("id")
     private int mId;
+
+    @ColumnInfo(name = "shortDescription")
     @SerializedName("shortDescription")
     private String mShortDescription;
+
+    @ColumnInfo(name = "description")
     @SerializedName("description")
     private String mDescription;
+
+    @ColumnInfo(name = "videoURL")
     @SerializedName("videoURL")
     private String mVideoURL;
+
+    @ColumnInfo(name = "thumbnailURL")
     @SerializedName("thumbnailURL")
     private String mThumbnailURL;
 

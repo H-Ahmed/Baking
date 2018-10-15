@@ -18,14 +18,14 @@ import java.util.List;
 
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesAdapterViewHolder> {
-    private Recipe[] mRecipes;
+    private List<Recipe> mRecipes;
     private final RecipesAdapterOnClickHandler mClickHandler;
 
     public interface RecipesAdapterOnClickHandler{
         void onClick(String recipeName, List<Step> steps, List<Ingredient> ingredients);
     }
 
-    public RecipesAdapter(Recipe[] recipes, RecipesAdapterOnClickHandler clickHandler) {
+    public RecipesAdapter(List<Recipe> recipes, RecipesAdapterOnClickHandler clickHandler) {
         mRecipes = recipes;
         mClickHandler = clickHandler;
     }
@@ -40,19 +40,19 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
 
     @Override
     public void onBindViewHolder(@NonNull RecipesAdapterViewHolder holder, int position) {
-        if (mRecipes[position].getImage() == null || mRecipes[position].getImage().equals("")){
+        if (mRecipes.get(position).getImage() == null || mRecipes.get(position).getImage().equals("")){
             holder.recipeImage.setVisibility(View.GONE);
         }else {
             Picasso.get()
-                    .load(mRecipes[position].getImage())
+                    .load(mRecipes.get(position).getImage())
                     .into(holder.recipeImage);
         }
-        holder.recipeTitle.setText(mRecipes[position].getName());
+        holder.recipeTitle.setText(mRecipes.get(position).getName());
     }
 
     @Override
     public int getItemCount() {
-        return mRecipes.length;
+        return mRecipes.size();
     }
 
     public class RecipesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -69,9 +69,9 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
 
         public void onClick(View view){
             int adapterPosition = getAdapterPosition();
-            List<Step> steps = mRecipes[adapterPosition].getSteps();
-            List<Ingredient> ingredients = mRecipes[adapterPosition].getIngredients();
-            mClickHandler.onClick(mRecipes[adapterPosition].getName(), steps, ingredients);
+            List<Step> steps = mRecipes.get(adapterPosition).getSteps();
+            List<Ingredient> ingredients = mRecipes.get(adapterPosition).getIngredients();
+            mClickHandler.onClick(mRecipes.get(adapterPosition).getName(), steps, ingredients);
         }
     }
 }

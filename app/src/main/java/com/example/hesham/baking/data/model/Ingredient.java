@@ -1,19 +1,26 @@
 package com.example.hesham.baking.data.model;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
 public class Ingredient implements Parcelable {
+
+    @ColumnInfo(name = "quantity")
     @SerializedName("quantity")
     private double mQuantity;
+
+    @ColumnInfo(name = "measure")
     @SerializedName("measure")
     private String mMeasure;
+
+    @ColumnInfo(name = "ingredient")
     @SerializedName("ingredient")
     private String mIngredient;
 
-    public Ingredient(int quantity, String measure, String ingredient) {
+    public Ingredient(double quantity, String measure, String ingredient) {
         mQuantity = quantity;
         mMeasure = measure;
         mIngredient = ingredient;

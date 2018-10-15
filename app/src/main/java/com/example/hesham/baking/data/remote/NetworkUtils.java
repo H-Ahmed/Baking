@@ -36,6 +36,6 @@ public final class NetworkUtils {
 
     public interface PostService {
         @GET("baking.json")
-        Call<Recipe[]> getRecipes();
+        Call<List<Recipe>> getRecipes();
     }
 }

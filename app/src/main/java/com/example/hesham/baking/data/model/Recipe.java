@@ -1,23 +1,45 @@
 package com.example.hesham.baking.data.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.hesham.baking.data.local.IngredientTypeConverters;
+import com.example.hesham.baking.data.local.StepTypeConverters;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Recipe implements Parcelable{
+@Entity(tableName = "recipe")
+public class Recipe implements Parcelable {
+
+    @PrimaryKey
+    @ColumnInfo(name = "id")
     @SerializedName("id")
     private int mId;
+
+    @ColumnInfo(name = "name")
     @SerializedName("name")
     private String mName;
+
+    @ColumnInfo(name = "ingredients")
     @SerializedName("ingredients")
+    @TypeConverters(IngredientTypeConverters.class)
     private List<Ingredient> mIngredients = null;
+
+    @ColumnInfo(name = "steps")
     @SerializedName("steps")
+    @TypeConverters(StepTypeConverters.class)
     private List<Step> mSteps = null;
+
+    @ColumnInfo(name = "servings")
     @SerializedName("servings")
     private int mServings;
+
+    @ColumnInfo(name = "image")
     @SerializedName("image")
     private String mImage;
 

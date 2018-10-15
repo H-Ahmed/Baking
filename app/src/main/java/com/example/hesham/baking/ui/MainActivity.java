@@ -1,9 +1,13 @@
 package com.example.hesham.baking.ui;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +17,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.hesham.baking.data.local.AppDatabase;
+import com.example.hesham.baking.data.local.AppExecutors;
+import com.example.hesham.baking.data.local.RecipeViewModel;
 import com.example.hesham.baking.util.EspressoIdlingResource;
 import com.example.hesham.baking.R;
 
@@ -34,7 +41,6 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements RecipesAdapter.RecipesAdapterOnClickHandler {
 
     private static final String TAG = "MainActivity";
-    private static final String MAIN_ACTIVITY_ON_SAVE_RECIPES = "main_activity_on_save";
 
     public static final String STEP_FOR_DETAILS_ACTIVITY = "recipe_for_details_activity";
     public static final String INGREDIENT_FOR_DETAILS_ACTIVITY = "ingredient_for_details_activity";
@@ -44,18 +50,23 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
     @BindView(R.id.text_message)
     TextView textMessage;
 
-    private Recipe[] mRecipes;
+    private List<Recipe> mRecipes;
     private GridLayoutManager layoutManager;
     private RecipesAdapter adapter;
+
+    private AppDatabase mDb;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mDb = AppDatabase.getInstance(getApplicationContext());
         ButterKnife.bind(this);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         showLoadMessage();
+        readRecipes();
+
 
         EspressoIdlingResource.increment();
 
@@ -65,36 +76,62 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         recipesRecyclerView.setLayoutManager(layoutManager);
 
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(MAIN_ACTIVITY_ON_SAVE_RECIPES)) {
-            showRecipesData();
-            mRecipes = (Recipe[]) savedInstanceState.getParcelableArray(MAIN_ACTIVITY_ON_SAVE_RECIPES);
-            adapter = new RecipesAdapter(mRecipes, MainActivity.this);
-            recipesRecyclerView.setAdapter(adapter);
-        } else {
-            Call<Recipe[]> recipeCall = NetworkUtils.getService().getRecipes();
-            recipeCall.enqueue(new Callback<Recipe[]>() {
-                @Override
-                public void onResponse(Call<Recipe[]> call, Response<Recipe[]> response) {
-                    showRecipesData();
-                    mRecipes = response.body();
-                    adapter = new RecipesAdapter(mRecipes, MainActivity.this);
-                    recipesRecyclerView.setAdapter(adapter);
-                    EspressoIdlingResource.decrement();
-                }
+    }
 
-                @Override
-                public void onFailure(Call<Recipe[]> call, Throwable t) {
-                    showErrorMessage();
-                    Log.d(TAG, "onFailure: " + t.toString());
+
+    private void readRecipes() {
+        RecipeViewModel viewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable List<Recipe> recipes) {
+                mRecipes = recipes;
+                if (mRecipes == null) {
+                    downloadData();
+                } else {
+                    setupView();
                 }
-            });
-        }
+            }
+        });
+    }
+
+    private void setupView() {
+        showRecipesData();
+        adapter = new RecipesAdapter(mRecipes, this);
+        recipesRecyclerView.setAdapter(adapter);
+    }
+
+    private void downloadData() {
+        final Call<List<Recipe>> recipeCall = NetworkUtils.getService().getRecipes();
+        recipeCall.enqueue(new Callback<List<Recipe>>() {
+            @Override
+            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                showRecipesData();
+                final List<Recipe> recipes = response.body();
+                AppExecutors.getsInstance().diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (Recipe recipe : recipes) {
+                            mDb.recipeDao().insertRecipe(recipe);
+                            Log.e(TAG, "Done");
+                        }
+                    }
+                });
+                readRecipes();
+                EspressoIdlingResource.decrement();
+            }
+
+            @Override
+            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+                String message = "Internet Connection Error";
+                showErrorMessage(message);
+                Log.d(TAG, "onFailure: " + t.toString());
+            }
+        });
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArray(MAIN_ACTIVITY_ON_SAVE_RECIPES, mRecipes);
     }
 
     @Override
@@ -125,9 +162,9 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         recipesRecyclerView.setVisibility(View.GONE);
     }
 
-    private void showErrorMessage() {
+    private void showErrorMessage(String message) {
         textMessage.setVisibility(View.VISIBLE);
-        textMessage.setText("Error");
+        textMessage.setText(message);
         recipesRecyclerView.setVisibility(View.GONE);
     }
 
