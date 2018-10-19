@@ -30,6 +30,7 @@ public class StepActivity extends AppCompatActivity {
     private static final String STEP_ACTIVITY_ON_SAVE_STEPS = "step_activity_on_save_steps";
     private static final String STEP_ACTIVITY_ON_SAVE_STEP_INDEX = "step_activity_on_save_step_index";
     private static final String STEP_ACTIVITY_ON_SAVE_RECIPE_NAME = "step_activity_on_save_recipe_name";
+    private static final String STEP_FRAGMENT_KEY = "step_fragment_key";
 
 
 
@@ -49,6 +50,8 @@ public class StepActivity extends AppCompatActivity {
     private int mStepIndex;
     private Step mStep;
 
+    private StepFragment stepFragment;
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,9 @@ public class StepActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        fragmentManager = getSupportFragmentManager();
+        stepFragment = new StepFragment();
+
         if (savedInstanceState != null
                 && savedInstanceState.containsKey(STEP_ACTIVITY_ON_SAVE_STEPS)
                 && savedInstanceState.containsKey(STEP_ACTIVITY_ON_SAVE_STEP_INDEX)
@@ -65,6 +71,7 @@ public class StepActivity extends AppCompatActivity {
             mSteps = savedInstanceState.getParcelableArrayList(STEP_ACTIVITY_ON_SAVE_STEPS);
             mStepIndex = savedInstanceState.getInt(STEP_ACTIVITY_ON_SAVE_STEP_INDEX);
             mRecipeName = savedInstanceState.getString(STEP_ACTIVITY_ON_SAVE_RECIPE_NAME);
+            stepFragment = (StepFragment) getSupportFragmentManager().getFragment(savedInstanceState, STEP_FRAGMENT_KEY);
 
             startStep();
         } else {
@@ -127,6 +134,7 @@ public class StepActivity extends AppCompatActivity {
         outState.putParcelableArrayList(STEP_ACTIVITY_ON_SAVE_STEPS, (ArrayList<? extends Parcelable>) mSteps);
         outState.putInt(STEP_ACTIVITY_ON_SAVE_STEP_INDEX, mStepIndex);
         outState.putString(STEP_ACTIVITY_ON_SAVE_RECIPE_NAME, mRecipeName);
+        getSupportFragmentManager().putFragment(outState, STEP_FRAGMENT_KEY, stepFragment);
     }
 
     private void startStep() {
@@ -136,9 +144,6 @@ public class StepActivity extends AppCompatActivity {
             Toast.makeText(StepActivity.this, "No Steps", Toast.LENGTH_SHORT).show();
             closeActivity();
         } else {
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            StepFragment stepFragment = new StepFragment();
             stepFragment.setStep(mStep);
             fragmentManager.beginTransaction()
                     .replace(R.id.step_container, stepFragment)

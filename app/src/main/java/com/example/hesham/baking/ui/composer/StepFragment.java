@@ -29,12 +29,21 @@ public class StepFragment extends Fragment {
 
     private static final String ON_SAVE_STEP = "on_save_step";
     public static final String VIDEO_URL = "video_url";
+    private static final String THUMBNAIL_PLAYER_STATE = "thumbnail_player_state";
+    private static final String VIDEO_PLAYER_STATE = "video_player_state";
+    private static final String THUMBNAIL_PLAYER_POSITION = "thumbnail_player_position";
+    private static final String VIDEO_PLAYER_POSITION = "video_player_position";
 
     private PlayerView mVideoPlayerView;
     private PlayerView mThumbnailPlayerView;
 
     private SimpleExoPlayer mVideoPlayer;
     private SimpleExoPlayer mThumbnailPlayer;
+
+    private boolean videoPlayerState;
+    private boolean thumbnailPlayerState;
+    private Long videoPlayerPosition;
+    private Long thumbnailPlayerPosition;
 
     private Step mStep;
 
@@ -47,6 +56,12 @@ public class StepFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mStep = savedInstanceState.getParcelable(ON_SAVE_STEP);
+
+            videoPlayerState = savedInstanceState.getBoolean(VIDEO_PLAYER_STATE);
+            thumbnailPlayerState = savedInstanceState.getBoolean(THUMBNAIL_PLAYER_STATE);
+
+            videoPlayerPosition = savedInstanceState.getLong(VIDEO_PLAYER_POSITION);
+            thumbnailPlayerPosition = savedInstanceState.getLong(THUMBNAIL_PLAYER_POSITION);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_step, container, false);
@@ -55,45 +70,24 @@ public class StepFragment extends Fragment {
         mVideoPlayerView = rootView.findViewById(R.id.video_player_view);
         mThumbnailPlayerView = rootView.findViewById(R.id.thumbnail_player_view);
 
-        mVideoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), new DefaultTrackSelector());
-        mThumbnailPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), new DefaultTrackSelector());
-
         TextView descriptionTextView = rootView.findViewById(R.id.step_description_text_view);
 
         if (mStep.getVideoURL().equals("") && mStep.getThumbnailURL().equals("")) {
             videosLayout.setVisibility(View.GONE);
-            if (mVideoPlayer != null) {
-                releaseVideo();
-            }
-            if (mThumbnailPlayer != null) {
-                releaseThumbnail();
-            }
+
         } else if (!mStep.getVideoURL().equals("") && mStep.getThumbnailURL().equals("")) {
             videosLayout.setVisibility(View.VISIBLE);
             mVideoPlayerView.setVisibility(View.VISIBLE);
-            startPlayer(mVideoPlayer, mVideoPlayerView, mStep.getVideoURL());
             mThumbnailPlayerView.setVisibility(View.GONE);
-            if (mThumbnailPlayer != null) {
-                releaseThumbnail();
-            }
+
         } else if (mStep.getVideoURL().equals("") && !mStep.getThumbnailURL().equals("")) {
             videosLayout.setVisibility(View.VISIBLE);
             mVideoPlayerView.setVisibility(View.GONE);
-            if (mVideoPlayer != null) {
-                releaseVideo();
-            }
             mThumbnailPlayerView.setVisibility(View.VISIBLE);
-            startPlayer(mThumbnailPlayer, mThumbnailPlayerView, mStep.getThumbnailURL());
         } else {
             videosLayout.setVisibility(View.VISIBLE);
             mVideoPlayerView.setVisibility(View.VISIBLE);
             mThumbnailPlayerView.setVisibility(View.VISIBLE);
-            if (mVideoPlayer != null) {
-                releaseVideo();
-            }
-            if (mThumbnailPlayer != null) {
-                releaseThumbnail();
-            }
         }
 
 
@@ -130,13 +124,97 @@ public class StepFragment extends Fragment {
                 .createMediaSource(Uri.parse(videoURL));
 
         simpleExoPlayer.prepare(mediaSource);
-        simpleExoPlayer.setPlayWhenReady(true);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+            initializePlayer();
+        }
+    }
+
+    private void initializePlayer() {
+        mVideoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), new DefaultTrackSelector());
+        mThumbnailPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), new DefaultTrackSelector());
+
+        mVideoPlayer.setPlayWhenReady(videoPlayerState);
+        mThumbnailPlayer.setPlayWhenReady(thumbnailPlayerState);
+
+
+        if (mStep.getVideoURL().equals("") && mStep.getThumbnailURL().equals("")) {
+            if (mVideoPlayer != null) {
+                releaseVideo();
+            }
+            if (mThumbnailPlayer != null) {
+                releaseThumbnail();
+            }
+        } else if (!mStep.getVideoURL().equals("") && mStep.getThumbnailURL().equals("")) {
+            startPlayer(mVideoPlayer, mVideoPlayerView, mStep.getVideoURL());
+            if (mThumbnailPlayer != null) {
+                releaseThumbnail();
+            }
+        } else if (mStep.getVideoURL().equals("") && !mStep.getThumbnailURL().equals("")) {
+            if (mVideoPlayer != null) {
+                releaseVideo();
+            }
+            startPlayer(mThumbnailPlayer, mThumbnailPlayerView, mStep.getThumbnailURL());
+        } else {
+            if (mVideoPlayer != null) {
+                releaseVideo();
+            }
+            if (mThumbnailPlayer != null) {
+                releaseThumbnail();
+            }
+        }
+
+        if (mVideoPlayer != null && videoPlayerPosition != null) {
+            mVideoPlayer.seekTo(videoPlayerPosition);
+        }
+        if (mThumbnailPlayer != null && thumbnailPlayerPosition != null) {
+            mThumbnailPlayer.seekTo(thumbnailPlayerPosition);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (Util.SDK_INT <= 23 || mThumbnailPlayer == null) {
+            initializePlayer();
+        }
+        if (Util.SDK_INT <= 23 || mVideoPlayer == null) {
+            initializePlayer();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (Util.SDK_INT <= 23) {
+            releaseVideo();
+            releaseThumbnail();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            releaseVideo();
+            releaseThumbnail();
+        }
+
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(ON_SAVE_STEP, mStep);
+        outState.putBoolean(THUMBNAIL_PLAYER_STATE, mThumbnailPlayer.getPlayWhenReady());
+        outState.putBoolean(VIDEO_PLAYER_STATE, mVideoPlayer.getPlayWhenReady());
+
+        outState.putLong(THUMBNAIL_PLAYER_POSITION, mThumbnailPlayer.getCurrentPosition());
+        outState.putLong(VIDEO_PLAYER_POSITION, mVideoPlayer.getCurrentPosition());
     }
 
 
@@ -144,14 +222,6 @@ public class StepFragment extends Fragment {
         mStep = step;
     }
 
-
-    @Override
-    public void onStop() {
-
-        releaseVideo();
-        releaseThumbnail();
-        super.onStop();
-    }
 
     private void releaseVideo() {
         mVideoPlayer.release();
