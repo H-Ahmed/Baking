@@ -3,14 +3,10 @@ package com.example.hesham.baking;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -18,7 +14,6 @@ import com.example.hesham.baking.data.service.BakingWidgetService;
 import com.example.hesham.baking.ui.BakingAppWidgetConfig;
 import com.example.hesham.baking.ui.MainActivity;
 
-import static android.support.constraint.Constraints.TAG;
 
 /**
  * Implementation of App Widget functionality.
@@ -83,7 +78,7 @@ public class BakingWidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onDeleted(Context context, int[] appWidgetIds) {
-        Toast.makeText(context, "onDelted", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "onDeleted", Toast.LENGTH_SHORT).show();
     }
 }
 

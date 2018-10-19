@@ -10,33 +10,30 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/recipe_details_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimaryDark"
+        style="@style/ToolBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="@android:color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:orientation="horizontal">
 
         <FrameLayout
             android:id="@+id/recipe_container"
-            android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_width="@dimen/weight_thickness"
             android:layout_height="match_parent"
-            android:scaleType="centerInside"/>
+            android:layout_weight="2"
+            android:scaleType="centerInside" />
 
         <View
-            android:layout_width="1dp"
+            android:layout_width="@dimen/view_thickness"
             android:layout_height="match_parent"
             android:background="@android:color/holo_red_dark" />
 
         <FrameLayout
             android:id="@+id/details_container"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/weight_thickness"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:scaleType="centerInside" />

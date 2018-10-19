@@ -9,17 +9,12 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/recipe_details_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="8dp"
-        android:background="@color/colorPrimaryDark"
+        style="@style/ToolBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="@android:color/white" />
 
     <FrameLayout
         android:id="@+id/recipe_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerInside"/>
+        style="@style/ActivityFrameLayout" />
 
 </LinearLayout>

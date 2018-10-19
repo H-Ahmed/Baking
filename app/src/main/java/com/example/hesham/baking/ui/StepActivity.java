@@ -6,7 +6,6 @@ import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -32,7 +31,7 @@ public class StepActivity extends AppCompatActivity {
     private static final String STEP_ACTIVITY_ON_SAVE_STEP_INDEX = "step_activity_on_save_step_index";
     private static final String STEP_ACTIVITY_ON_SAVE_RECIPE_NAME = "step_activity_on_save_recipe_name";
 
-    private static final String TAG = "StepActivity";
+
 
 
     @BindView(R.id.next_step_button)
@@ -105,7 +104,6 @@ public class StepActivity extends AppCompatActivity {
                 }
                 mStep = mSteps.get(mStepIndex);
                 startStep();
-                Log.d(TAG, "onClick: Next");
             }
         });
         mPreviousStepButton.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +141,7 @@ public class StepActivity extends AppCompatActivity {
             StepFragment stepFragment = new StepFragment();
             stepFragment.setStep(mStep);
             fragmentManager.beginTransaction()
-                    .replace(R.id.step_container,stepFragment)
+                    .replace(R.id.step_container, stepFragment)
                     .commit();
         }
     }

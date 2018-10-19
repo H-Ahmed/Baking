@@ -1,7 +1,6 @@
 package com.example.hesham.baking.ui;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -40,7 +38,6 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements RecipesAdapter.RecipesAdapterOnClickHandler {
 
-    private static final String TAG = "MainActivity";
 
     public static final String STEP_FOR_DETAILS_ACTIVITY = "recipe_for_details_activity";
     public static final String INGREDIENT_FOR_DETAILS_ACTIVITY = "ingredient_for_details_activity";
@@ -64,11 +61,11 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         mDb = AppDatabase.getInstance(getApplicationContext());
         ButterKnife.bind(this);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        showLoadMessage();
-        readRecipes();
 
-
-        EspressoIdlingResource.increment();
+        if (mRecipes == null || mRecipes.isEmpty()) {
+            showErrorMessage(getString(R.string.loading));
+            readRecipes();
+        }
 
         int noOfColumns = calculateNoOfColumns(this);
         layoutManager = new GridLayoutManager(this, noOfColumns);
@@ -84,27 +81,25 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(@Nullable List<Recipe> recipes) {
+                showRecipesData();
                 mRecipes = recipes;
-                if (mRecipes == null) {
+                adapter = new RecipesAdapter(mRecipes, MainActivity.this);
+                recipesRecyclerView.setAdapter(adapter);
+                if (mRecipes == null || mRecipes.isEmpty()) {
                     downloadData();
-                } else {
-                    setupView();
                 }
             }
         });
+
     }
 
-    private void setupView() {
-        showRecipesData();
-        adapter = new RecipesAdapter(mRecipes, this);
-        recipesRecyclerView.setAdapter(adapter);
-    }
 
     private void downloadData() {
         final Call<List<Recipe>> recipeCall = NetworkUtils.getService().getRecipes();
         recipeCall.enqueue(new Callback<List<Recipe>>() {
             @Override
             public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+                EspressoIdlingResource.increment();
                 showRecipesData();
                 final List<Recipe> recipes = response.body();
                 AppExecutors.getsInstance().diskIO().execute(new Runnable() {
@@ -112,27 +107,20 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
                     public void run() {
                         for (Recipe recipe : recipes) {
                             mDb.recipeDao().insertRecipe(recipe);
-                            Log.e(TAG, "Done");
                         }
+                        readRecipes();
                     }
                 });
-                readRecipes();
                 EspressoIdlingResource.decrement();
             }
 
             @Override
             public void onFailure(Call<List<Recipe>> call, Throwable t) {
-                String message = "Internet Connection Error";
-                showErrorMessage(message);
-                Log.d(TAG, "onFailure: " + t.toString());
+                showErrorMessage(getString(R.string.connection_error));
             }
         });
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
 
     @Override
     protected void onDestroy() {
@@ -140,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         ButterKnife.bind(this).unbind();
     }
 
-    public static int calculateNoOfColumns(Context context) {
+    private static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         int scalingFactor = 400;
@@ -156,15 +144,10 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         recipesRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void showLoadMessage() {
-        textMessage.setVisibility(View.VISIBLE);
-        textMessage.setText("Loading....");
-        recipesRecyclerView.setVisibility(View.GONE);
-    }
 
     private void showErrorMessage(String message) {
-        textMessage.setVisibility(View.VISIBLE);
         textMessage.setText(message);
+        textMessage.setVisibility(View.VISIBLE);
         recipesRecyclerView.setVisibility(View.GONE);
     }
 

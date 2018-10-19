@@ -1,6 +1,6 @@
 package com.example.hesham.baking.ui.composer;
 
-import android.annotation.SuppressLint;
+
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -14,8 +14,6 @@ import android.view.ViewGroup;
 
 import com.example.hesham.baking.R;
 import com.example.hesham.baking.data.model.Ingredient;
-import com.example.hesham.baking.ui.IngredientActivity;
-import com.example.hesham.baking.ui.RecipeDetailsActivity;
 
 import java.util.ArrayList;
 import java.util.List;

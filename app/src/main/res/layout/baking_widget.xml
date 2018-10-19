@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -12,17 +11,18 @@
 
         <Button
             android:id="@+id/widget_baking_button"
-            android:layout_width="0dp"
-            android:layout_weight="4"
+            android:layout_width="@dimen/weight_thickness"
             android:layout_height="wrap_content"
-            android:text="choose recipe" />
+            android:layout_weight="4"
+            android:text="@string/choose_recipe" />
 
         <ImageView
             android:id="@+id/widget_baking_image"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_margin="8dp"
+            android:layout_width="@dimen/weight_thickness"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/master_margin"
+            android:layout_weight="1"
+            android:contentDescription="@string/launch_application"
             android:src="@drawable/ic_cupcake" />
     </LinearLayout>
 
@@ -47,9 +47,9 @@
         android:layout_height="match_parent"
         android:background="@android:color/darker_gray"
         android:gravity="center"
-        android:text="Empty"
+        android:text="@string/empty"
         android:textColor="@android:color/white"
-        android:textSize="25sp"
+        android:textSize="@dimen/widget_text_size"
         android:textStyle="bold" />
 
 

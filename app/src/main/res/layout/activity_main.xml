@@ -8,20 +8,16 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_alignParentTop="true"
+        style="@style/ToolBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:layout_marginBottom="8dp"
-        android:background="@color/colorPrimaryDark"
-        app:titleTextColor="@android:color/white"/>
+        app:titleTextColor="@android:color/white" />
 
     <TextView
         android:id="@+id/text_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:textSize="32sp"
+        android:textSize="@dimen/large_text_size"
         tools:text="Hello World!" />
 
     <android.support.v7.widget.RecyclerView

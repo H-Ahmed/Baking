@@ -1,14 +1,11 @@
 package com.example.hesham.baking.data.service;
 
 import android.app.Activity;
-import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -33,36 +30,44 @@ public class BakingWidgetService extends RemoteViewsService {
 
     class BakingWidgetItemFactory implements RemoteViewsFactory {
         private AppDatabase mDb;
-        private static final String TAG = "BakingWidgetItemFactory";
-        private LiveData<List<Recipe>> mRecipes;
+        private LiveData<List<Recipe>> mLiveRecipes;
         private Context mContext;
-        private List<Ingredient> ingredients = new ArrayList<>();
+        private List<Recipe> mRecipes = new ArrayList<>();
+        private List<Ingredient> mIngredients = new ArrayList<>();
         private int recipeIndex;
 
         public BakingWidgetItemFactory(Context context, Intent intent) {
             this.mContext = context;
-            recipeIndex = getSharedPreferences(SHARE_PREF_KEY, Activity.MODE_PRIVATE)
-                    .getInt(RECIPE_INDEX_KEY, 1);
         }
 
         @Override
         public void onCreate() {
+            mDb = AppDatabase.getInstance(getApplicationContext());
+            mLiveRecipes = mDb.recipeDao().loadAllRecipes();
+
+            mLiveRecipes.observeForever(new Observer<List<Recipe>>() {
+                @Override
+                public void onChanged(@Nullable List<Recipe> recipes) {
+                    mRecipes = recipes;
+                }
+            });
+
+            recipeIndex = getSharedPreferences(SHARE_PREF_KEY, Activity.MODE_PRIVATE)
+                    .getInt(RECIPE_INDEX_KEY, 1);
+            if (mRecipes.size() != 0) {
+                mIngredients = mRecipes.get(recipeIndex).getIngredients();
+            }
 
         }
 
 
-
         @Override
         public void onDataSetChanged() {
-            mDb = AppDatabase.getInstance(getApplicationContext());
-            mRecipes = mDb.recipeDao().loadAllRecipes();
-
-            mRecipes.observeForever(new Observer<List<Recipe>>() {
-                @Override
-                public void onChanged(@Nullable List<Recipe> recipes) {
-                    ingredients = recipes.get(recipeIndex).getIngredients();
-                }
-            });
+            recipeIndex = getSharedPreferences(SHARE_PREF_KEY, Activity.MODE_PRIVATE)
+                    .getInt(RECIPE_INDEX_KEY, 1);
+            if (mRecipes.size() != 0) {
+                mIngredients = mRecipes.get(recipeIndex).getIngredients();
+            }
         }
 
         @Override
@@ -72,24 +77,23 @@ public class BakingWidgetService extends RemoteViewsService {
 
         @Override
         public int getCount() {
-            return ingredients != null ? ingredients.size() : 0;
+            return mIngredients.size();
         }
+
 
         @Override
         public RemoteViews getViewAt(int i) {
             RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.ingredient_widget_item);
-            views.setTextViewText(R.id.quantity_value, String.valueOf(ingredients.get(i).getQuantity()));
-            Log.e(TAG, "getViewAt: " + String.valueOf(ingredients.get(i).getQuantity()));
-            views.setTextViewText(R.id.measure_value, ingredients.get(i).getMeasure());
-            Log.e(TAG, "getViewAt: " + ingredients.get(i).getMeasure());
-            views.setTextViewText(R.id.ingredient_value, ingredients.get(i).getIngredient());
-            Log.e(TAG, "getViewAt: " + String.valueOf(ingredients.get(i).getIngredient()));
+            views.setTextViewText(R.id.quantity_value, String.valueOf(mIngredients.get(i).getQuantity()));
+            views.setTextViewText(R.id.measure_value, mIngredients.get(i).getMeasure());
+            views.setTextViewText(R.id.ingredient_value, mIngredients.get(i).getIngredient());
+
             return views;
         }
 
         @Override
         public RemoteViews getLoadingView() {
-            return null ;
+            return null;
         }
 
         @Override

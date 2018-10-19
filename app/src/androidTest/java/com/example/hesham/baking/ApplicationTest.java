@@ -17,10 +17,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.anything;
 
 @RunWith(AndroidJUnit4.class)
 public class ApplicationTest {
@@ -29,7 +25,7 @@ public class ApplicationTest {
     public ActivityTestRule<MainActivity> mMainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
-    public void setUp(){
+    public void setUp() {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.getIdlingResource());
     }
 
@@ -42,7 +38,7 @@ public class ApplicationTest {
 
 
     @Test
-    public void CheckFirstStepActivity(){
+    public void CheckFirstStepActivity() {
 
         onView(ViewMatchers.withId(R.id.recipes_recycler_view))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, ViewActions.click()));
@@ -55,7 +51,6 @@ public class ApplicationTest {
 
 
     }
-
 
 
 }

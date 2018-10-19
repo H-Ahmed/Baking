@@ -5,15 +5,12 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import com.example.hesham.baking.R;
 import com.example.hesham.baking.data.model.Ingredient;
 import com.example.hesham.baking.ui.composer.IngredientFragment;
-import com.example.hesham.baking.ui.composer.IngredientsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +29,6 @@ public class IngredientActivity extends AppCompatActivity {
     Toolbar mToolbar;
     private String mRecipeName;
     private List<Ingredient> mIngredients;
-
-
 
 
     @Override
@@ -80,7 +75,7 @@ public class IngredientActivity extends AppCompatActivity {
         IngredientFragment ingredientFragment = new IngredientFragment();
         ingredientFragment.setIngredients(mIngredients);
         fragmentManager.beginTransaction()
-                .replace(R.id.ingredient_container,ingredientFragment)
+                .replace(R.id.ingredient_container, ingredientFragment)
                 .commit();
     }
 

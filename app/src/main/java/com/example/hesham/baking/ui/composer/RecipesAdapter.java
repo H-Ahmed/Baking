@@ -21,7 +21,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
     private List<Recipe> mRecipes;
     private final RecipesAdapterOnClickHandler mClickHandler;
 
-    public interface RecipesAdapterOnClickHandler{
+    public interface RecipesAdapterOnClickHandler {
         void onClick(String recipeName, List<Step> steps, List<Ingredient> ingredients);
     }
 
@@ -40,9 +40,9 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
 
     @Override
     public void onBindViewHolder(@NonNull RecipesAdapterViewHolder holder, int position) {
-        if (mRecipes.get(position).getImage() == null || mRecipes.get(position).getImage().equals("")){
+        if (mRecipes.get(position).getImage() == null || mRecipes.get(position).getImage().equals("")) {
             holder.recipeImage.setVisibility(View.GONE);
-        }else {
+        } else {
             Picasso.get()
                     .load(mRecipes.get(position).getImage())
                     .into(holder.recipeImage);
@@ -55,19 +55,19 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesA
         return mRecipes.size();
     }
 
-    public class RecipesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class RecipesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView recipeImage;
         TextView recipeTitle;
 
         public RecipesAdapterViewHolder(View itemView) {
             super(itemView);
-            recipeImage = (ImageView) itemView.findViewById(R.id.recipe_image_view);
-            recipeTitle = (TextView) itemView.findViewById(R.id.recipe_title_text_view);
+            recipeImage = itemView.findViewById(R.id.recipe_image_view);
+            recipeTitle = itemView.findViewById(R.id.recipe_title_text_view);
 
             itemView.setOnClickListener(this);
         }
 
-        public void onClick(View view){
+        public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
             List<Step> steps = mRecipes.get(adapterPosition).getSteps();
             List<Ingredient> ingredients = mRecipes.get(adapterPosition).getIngredients();

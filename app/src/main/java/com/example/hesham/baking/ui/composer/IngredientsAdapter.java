@@ -51,9 +51,9 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
         public IngredientsAdapterViewHolder(View itemView) {
             super(itemView);
 
-            mQuantity = (TextView) itemView.findViewById(R.id.quantity_value);
-            mMeasure = (TextView) itemView.findViewById(R.id.measure_value);
-            mIngredient = (TextView) itemView.findViewById(R.id.ingredient_value);
+            mQuantity = itemView.findViewById(R.id.quantity_value);
+            mMeasure = itemView.findViewById(R.id.measure_value);
+            mIngredient = itemView.findViewById(R.id.ingredient_value);
         }
 
     }

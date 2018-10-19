@@ -5,19 +5,13 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.example.hesham.baking.R;
 import com.example.hesham.baking.data.model.Ingredient;
 import com.example.hesham.baking.data.model.Step;
 import com.example.hesham.baking.ui.composer.IngredientFragment;
-import com.example.hesham.baking.ui.composer.RecipeDetailsAdapter;
 import com.example.hesham.baking.ui.composer.RecipeFragment;
 import com.example.hesham.baking.ui.composer.StepFragment;
 
@@ -91,7 +85,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeFr
 
         getSupportActionBar().setTitle(mRecipeName);
         fragmentManager = getSupportFragmentManager();
-
 
 
         if (findViewById(R.id.two_pane_layout) != null) {

@@ -9,42 +9,32 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/step_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="8dp"
-        android:background="@color/colorPrimaryDark"
+        style="@style/ToolBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="@android:color/white" />
 
     <FrameLayout
         android:id="@+id/step_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:scaleType="centerInside" />
+        style="@style/ActivityFrameLayout"
+        android:layout_weight="1" />
 
     <LinearLayout
         android:id="@+id/navigation_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/previous_step_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:text="Previous step" />
+            style="@style/IngredientButton"
+            android:text="@string/previous_step" />
 
         <Button
             android:id="@+id/next_step_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:layout_weight="1"
-            android:text="Next step" />
+            style="@style/IngredientButton"
+            android:text="@string/next_step" />
     </LinearLayout>
 
 </LinearLayout>

@@ -5,66 +5,39 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+    <LinearLayout style="@style/IngredientWidgetItemLayout">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="textCapWords"
-            android:text="quantity" />
+            style="@style/IngredientItemTextViewTitle"
+            android:text="@string/quantity" />
 
         <TextView
             android:id="@+id/quantity_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="start|left"
+            style="@style/IngredientItemTextViewValue"
             tools:text="quantity value" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+    <LinearLayout style="@style/IngredientWidgetItemLayout">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="textCapWords"
-            android:text="measure" />
+            style="@style/IngredientItemTextViewTitle"
+            android:text="@string/measure" />
 
         <TextView
             android:id="@+id/measure_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="start|left"
+            style="@style/IngredientItemTextViewValue"
             tools:text="measure value" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+    <LinearLayout style="@style/IngredientWidgetItemLayout">
 
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:inputType="textCapWords"
-            android:text="ingredient" />
+            style="@style/IngredientItemTextViewTitle"
+            android:text="@string/ingredient" />
 
         <TextView
             android:id="@+id/ingredient_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="start|left"
+            style="@style/IngredientItemTextViewValue"
             tools:text="ingredient value" />
     </LinearLayout>
 </LinearLayout>

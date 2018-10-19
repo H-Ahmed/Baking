@@ -1,7 +1,6 @@
 package com.example.hesham.baking.ui;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -11,7 +10,6 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,7 +28,6 @@ public class BakingAppWidgetConfig extends AppCompatActivity {
 
     public static final String SHARE_PREF_KEY = "share_pref_key";
     public static final String RECIPE_INDEX_KEY = "recipe_index_key";
-    private static final String TAG = "BakingAppWidgetConfig";
 
     private List<Recipe> mRecipes;
     private int appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
@@ -42,7 +39,6 @@ public class BakingAppWidgetConfig extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_baking_app_widget_config);
-        Log.e(TAG, "onCreate: Hii wedget");
 
         Intent configIntent = getIntent();
         Bundle extras = configIntent.getExtras();
@@ -55,7 +51,6 @@ public class BakingAppWidgetConfig extends AppCompatActivity {
         setResult(RESULT_CANCELED, resultValue);
 
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
-            Log.e(TAG, "onCreate: Hii Noooooooooooooooo wedget");
             finish();
         }
 
@@ -107,19 +102,17 @@ public class BakingAppWidgetConfig extends AppCompatActivity {
     public void confirmConfiguration(View view) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 
-        Intent serviceIntent = new Intent(this, BakingWidgetService.class);
-        serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
         RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.baking_widget);
 
+        Intent serviceIntent = new Intent(this, BakingWidgetService.class);
+        serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
         int recipeIndex = sp.getInt(RECIPE_INDEX_KEY, -1);
         views.setTextViewText(R.id.widget_baking_title, mRecipes.get(recipeIndex).getName());
         views.setRemoteAdapter(appWidgetId, R.id.widget_baking_list_view, serviceIntent);
         views.setEmptyView(R.id.widget_baking_list_view, R.id.widget_baking_empty_list);
-
-
         appWidgetManager.updateAppWidget(appWidgetId, views);
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_baking_list_view);
 

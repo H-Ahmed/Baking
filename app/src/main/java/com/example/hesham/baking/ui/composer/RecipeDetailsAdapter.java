@@ -48,7 +48,7 @@ public class RecipeDetailsAdapter extends RecyclerView.Adapter<RecipeDetailsAdap
 
         public RecipeDetailsAdapterViewHolder(View itemView) {
             super(itemView);
-            stepButton = (Button) itemView.findViewById(R.id.step_button);
+            stepButton = itemView.findViewById(R.id.step_button);
 
             itemView.setOnClickListener(this);
         }

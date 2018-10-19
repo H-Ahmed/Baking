@@ -11,12 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
 import com.example.hesham.baking.R;
 import com.example.hesham.baking.data.model.Ingredient;
 import com.example.hesham.baking.data.model.Step;
+
 import java.util.List;
 
-public class RecipeFragment extends Fragment implements RecipeDetailsAdapter.RecipeDetailsAdapterOnClickHandler{
+public class RecipeFragment extends Fragment implements RecipeDetailsAdapter.RecipeDetailsAdapterOnClickHandler {
 
     public final static String INGREDIENT_FOR_INGREDIENT_ACTIVITY = "ingredient_for_ingredient_activity";
     public final static String STEPS_FOR_STEP_ACTIVITY = "steps_for_step_activity";
@@ -30,15 +32,15 @@ public class RecipeFragment extends Fragment implements RecipeDetailsAdapter.Rec
     private RecyclerView mStepsRecyclerView;
     private Button mIngredientsButton;
 
-    OnRecyclerItemClickListener mRecyclerCallback;
-    OnButtonClickListener mButtonCallback;
+    private OnRecyclerItemClickListener mRecyclerCallback;
+    private OnButtonClickListener mButtonCallback;
 
     public interface OnRecyclerItemClickListener {
         void onClickRecyclerItem(int position);
     }
 
     public interface OnButtonClickListener {
-        void onClickButton ();
+        void onClickButton();
     }
 
     @Override
@@ -47,13 +49,14 @@ public class RecipeFragment extends Fragment implements RecipeDetailsAdapter.Rec
         try {
             mRecyclerCallback = (OnRecyclerItemClickListener) context;
             mButtonCallback = (OnButtonClickListener) context;
-        }catch (ClassCastException e){
+        } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
                     + "must implement OnClickListener");
         }
     }
 
-    public RecipeFragment(){}
+    public RecipeFragment() {
+    }
 
     @Nullable
     @Override
@@ -62,7 +65,7 @@ public class RecipeFragment extends Fragment implements RecipeDetailsAdapter.Rec
 
         mStepsRecyclerView = rootView.findViewById(R.id.recipe_steps_recycler_view);
         mIngredientsButton = rootView.findViewById(R.id.ingredients_button);
-        mIngredientsButton.setText("Ingredients");
+        mIngredientsButton.setText(getResources().getText(R.string.ingredients));
 
         mIngredientsButton.setOnClickListener(new View.OnClickListener() {
             @Override
