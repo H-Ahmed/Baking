@@ -81,12 +81,18 @@ public class MainActivity extends AppCompatActivity implements RecipesAdapter.Re
         viewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(@Nullable List<Recipe> recipes) {
-                showRecipesData();
                 mRecipes = recipes;
-                adapter = new RecipesAdapter(mRecipes, MainActivity.this);
-                recipesRecyclerView.setAdapter(adapter);
                 if (mRecipes == null || mRecipes.isEmpty()) {
                     downloadData();
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showRecipesData();
+                            adapter = new RecipesAdapter(mRecipes, MainActivity.this);
+                            recipesRecyclerView.setAdapter(adapter);
+                        }
+                    });
                 }
             }
         });

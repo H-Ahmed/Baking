@@ -14,6 +14,7 @@
         app:titleTextColor="@android:color/white" />
 
     <FrameLayout
+        android:layout_margin="@dimen/master_margin"
         android:id="@+id/ingredient_container"
         style="@style/ActivityFrameLayout"
         android:layout_weight="1" />

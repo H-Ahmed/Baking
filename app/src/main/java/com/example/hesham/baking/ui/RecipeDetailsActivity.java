@@ -30,6 +30,8 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeFr
     private static final String RECIPE_ACTIVITY_ON_SAVE_STEPS = "recipe_activity_on_save_steps";
     private static final String RECIPE_ACTIVITY_ON_SAVE_INGREDIENTS = "recipe_activity_on_save_ingredients";
     private static final String RECIPE_ACTIVITY_ON_SAVE_RECIPE_NAME = "recipe_activity_on_save_recipe_name";
+    private static final String STEP_FRAGMENT_KEY = "step_fragment_key";
+    private static final String RECIPE_STEP_INDEX = "recipe_step_index";
 
     @BindView(R.id.recipe_details_toolbar)
     Toolbar mToolbar;
@@ -38,7 +40,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeFr
     private List<Step> mSteps;
     private List<Ingredient> mIngredients;
 
-    private int mStepIndex;
+    private int mStepIndex = -1;
 
     private boolean mTwoPane;
     private FragmentManager fragmentManager;
@@ -55,6 +57,11 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeFr
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        fragmentManager = getSupportFragmentManager();
+        recipeFragment = new RecipeFragment();
+        ingredientFragment = new IngredientFragment();
+        stepFragment = new StepFragment();
+
         if (savedInstanceState != null && savedInstanceState.containsKey(RECIPE_ACTIVITY_ON_SAVE_STEPS)
                 && savedInstanceState.containsKey(RECIPE_ACTIVITY_ON_SAVE_INGREDIENTS)
                 && savedInstanceState.containsKey(RECIPE_ACTIVITY_ON_SAVE_RECIPE_NAME)) {
@@ -62,6 +69,11 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeFr
             mRecipeName = savedInstanceState.getString(RECIPE_ACTIVITY_ON_SAVE_RECIPE_NAME);
             mSteps = savedInstanceState.getParcelableArrayList(RECIPE_ACTIVITY_ON_SAVE_STEPS);
             mIngredients = savedInstanceState.getParcelableArrayList(RECIPE_ACTIVITY_ON_SAVE_INGREDIENTS);
+            mStepIndex = savedInstanceState.getInt(RECIPE_STEP_INDEX);
+            if (mStepIndex != -1) {
+                stepFragment = (StepFragment) getSupportFragmentManager().getFragment(savedInstanceState, STEP_FRAGMENT_KEY);
+            }
+
         } else {
             Intent intent = getIntent();
             if (intent == null) {
@@ -84,28 +96,32 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeFr
         }
 
         getSupportActionBar().setTitle(mRecipeName);
-        fragmentManager = getSupportFragmentManager();
+
 
 
         if (findViewById(R.id.two_pane_layout) != null) {
             mTwoPane = true;
 
-            recipeFragment = new RecipeFragment();
             recipeFragment.setIngredients(mIngredients);
             recipeFragment.setSteps(mSteps);
             fragmentManager.beginTransaction()
                     .replace(R.id.recipe_container, recipeFragment)
                     .commit();
 
-            ingredientFragment = new IngredientFragment();
-            ingredientFragment.setIngredients(mIngredients);
-            fragmentManager.beginTransaction()
-                    .replace(R.id.details_container, ingredientFragment)
-                    .commit();
+            if (mStepIndex == -1) {
+                ingredientFragment.setIngredients(mIngredients);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.details_container, ingredientFragment)
+                        .commit();
+            } else {
+                stepFragment.setStep(mSteps.get(mStepIndex));
+                fragmentManager.beginTransaction()
+                        .replace(R.id.details_container, stepFragment)
+                        .commit();
+            }
 
         } else {
             mTwoPane = false;
-            recipeFragment = new RecipeFragment();
             recipeFragment.setIngredients(mIngredients);
             recipeFragment.setSteps(mSteps);
             recipeFragment.setRecipeName(mRecipeName);
@@ -123,6 +139,10 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeFr
         outState.putParcelableArrayList(RECIPE_ACTIVITY_ON_SAVE_STEPS, (ArrayList<? extends Parcelable>) mSteps);
         outState.putParcelableArrayList(RECIPE_ACTIVITY_ON_SAVE_INGREDIENTS, (ArrayList<? extends Parcelable>) mIngredients);
         outState.putString(RECIPE_ACTIVITY_ON_SAVE_RECIPE_NAME, mRecipeName);
+        outState.putInt(RECIPE_STEP_INDEX, mStepIndex);
+        if (stepFragment.isAdded()) {
+            getSupportFragmentManager().putFragment(outState, STEP_FRAGMENT_KEY, stepFragment);
+        }
     }
 
 
@@ -140,9 +160,8 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeFr
     @Override
     public void onClickRecyclerItem(int position) {
         if (mTwoPane) {
-
-            mStepIndex = position;
             stepFragment = new StepFragment();
+            mStepIndex = position;
             stepFragment.setStep(mSteps.get(mStepIndex));
             fragmentManager.beginTransaction()
                     .replace(R.id.details_container, stepFragment)
@@ -160,6 +179,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements RecipeFr
     @Override
     public void onClickButton() {
         if (mTwoPane) {
+            mStepIndex = -1;
             ingredientFragment = new IngredientFragment();
             ingredientFragment.setIngredients(mIngredients);
             fragmentManager.beginTransaction()
